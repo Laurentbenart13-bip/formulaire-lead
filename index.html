@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulaire de contact</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      background: transparent; /* transparent pour l'iframe WordPress */
+      color: #1a1a1a;
+      padding: 1.5rem 1rem;
+    }
+
+    /* ── Carte formulaire ── */
+    .form-card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .form-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ── Champs ── */
+    .field { margin-bottom: 1.25rem; }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #d4d4d4;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #1a1a1a;
+      background: #fafafa;
+      transition: border-color 0.15s, background 0.15s;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: #555;
+      background: #fff;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    /* ── Ligne prénom / nom ── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 420px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── RGPD ── */
+    .rgpd-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 1.25rem 0 1.5rem;
+    }
+
+    .rgpd-row input[type="checkbox"] {
+      margin-top: 4px;
+      flex-shrink: 0;
+      accent-color: #1a1a1a;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .rgpd-row span {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .rgpd-row a {
+      color: #1a1a1a;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ── Bouton ── */
+    .submit-btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .submit-btn:hover { background: #333; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Messages de statut ── */
+    .status-msg {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .status-msg.success {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-msg.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* ── Note bas ── */
+    .form-note {
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* ── Spinner ── */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="form-card">
+  <h2 class="form-title">Restons en contact</h2>
+  <p class="form-subtitle">Remplissez le formulaire, on vous répond rapidement.</p>
+
+  <form id="leadForm" novalidate>
+
+    <!-- Prénom / Nom -->
+    <div class="field-row">
+      <div class="field">
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" name="prenom" placeholder="Marie" autocomplete="given-name" />
+      </div>
+      <div class="field">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom" placeholder="Dupont" autocomplete="family-name" />
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label for="email">Adresse email <span style="color:#c00">*</span></label>
+      <input type="email" id="email" name="email" placeholder="marie@exemple.fr" autocomplete="email" required />
+    </div>
+
+    <!-- Téléphone -->
+    <div class="field">
+      <label for="tel">Téléphone</label>
+      <input type="tel" id="tel" name="tel" placeholder="+33 6 00 00 00 00" autocomplete="tel" />
+    </div>
+
+    <!-- Message -->
+    <div class="field">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" placeholder="Dites-nous en plus sur votre projet..."></textarea>
+    </div>
+
+    <!-- RGPD -->
+    <div class="rgpd-row">
+      <input type="checkbox" id="rgpd" name="rgpd" required />
+      <span>
+        J'accepte que mes données soient utilisées pour me recontacter,
+        conformément à la <a href="#" target="_blank">politique de confidentialité</a>.
+        <span style="color:#c00">*</span>
+      </span>
+    </div>
+
+    <!-- Bouton -->
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <span id="btnLabel">Envoyer ma demande</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+
+    <!-- Messages -->
+    <div class="status-msg success" id="successMsg">
+      ✅ Message envoyé ! Nous vous répondrons très prochainement.
+    </div>
+    <div class="status-msg error" id="errorMsg">
+      ❌ Une erreur est survenue. Veuillez réessayer ou nous écrire directement.
+    </div>
+
+    <p class="form-note">Champ * obligatoire — données protégées & jamais revendues</p>
+  </form>
+</div>
+
+<script>
+  // ┌─────────────────────────────────────────────────────────────┐
+  // │  REMPLACE PAR TON ENDPOINT FORMSPREE                        │
+  // │  Exemple : https://formspree.io/f/xkgwabcd                  │
+  // └─────────────────────────────────────────────────────────────┘
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgodzvlo";
+
+  const form       = document.getElementById("leadForm");
+  const submitBtn  = document.getElementById("submitBtn");
+  const spinner    = document.getElementById("spinner");
+  const btnLabel   = document.getElementById("btnLabel");
+  const successMsg = document.getElementById("successMsg");
+  const errorMsg   = document.getElementById("errorMsg");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Validation manuelle
+    const email = document.getElementById("email").value.trim();
+    const rgpd  = document.getElementById("rgpd").checked;
+
+    if (!email) {
+      alert("L'adresse email est obligatoire.");
+      return;
+    }
+
+    if (!rgpd) {
+      alert("Veuillez accepter la politique de confidentialité.");
+      return;
+    }
+
+    // État chargement
+    submitBtn.disabled = true;
+    btnLabel.textContent = "Envoi en cours…";
+    spinner.style.display = "block";
+    successMsg.style.display = "none";
+    errorMsg.style.display = "none";
+
+    try {
+      const data = new FormData(form);
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        body: data,
+        headers: { "Accept": "application/json" }
+      });
+
+      if (response.ok) {
+        form.reset();
+        successMsg.style.display = "block";
+        // Scroll doux vers le message de succès
+        successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } else {
+        errorMsg.style.display = "block";
+      }
+    } catch (err) {
+      errorMsg.style.display = "block";
+    } finally {
+      submitBtn.disabled = false;
+      btnLabel.textContent = "Envoyer ma demande";
+      spinner.style.display = "none";
+    }
+  });
+</script>
+
+</body>
+</html>
