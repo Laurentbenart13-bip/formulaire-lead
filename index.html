@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Formulaire de contact</title>
   <style>
-    /* ── Reset & base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 16px;
       line-height: 1.6;
-      background: transparent; /* transparent pour l'iframe WordPress */
+      background: transparent;
       color: #1a1a1a;
       padding: 1.5rem 1rem;
     }
 
-    /* ── Carte formulaire ── */
     .form-card {
       max-width: 520px;
       margin: 0 auto;
@@ -40,7 +38,6 @@
       margin-bottom: 1.75rem;
     }
 
-    /* ── Champs ── */
     .field { margin-bottom: 1.25rem; }
 
     .field label {
@@ -76,7 +73,6 @@
       min-height: 90px;
     }
 
-    /* ── Ligne prénom / nom ── */
     .field-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -87,7 +83,6 @@
       .field-row { grid-template-columns: 1fr; }
     }
 
-    /* ── RGPD ── */
     .rgpd-row {
       display: flex;
       gap: 10px;
@@ -116,7 +111,6 @@
       text-underline-offset: 2px;
     }
 
-    /* ── Bouton ── */
     .submit-btn {
       width: 100%;
       padding: 0.75rem 1rem;
@@ -137,7 +131,6 @@
     .submit-btn:hover { background: #333; }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── Messages de statut ── */
     .status-msg {
       display: none;
       margin-top: 1rem;
@@ -161,7 +154,6 @@
       border: 1px solid #fecaca;
     }
 
-    /* ── Note bas ── */
     .form-note {
       font-size: 12px;
       color: #999;
@@ -169,7 +161,6 @@
       margin-top: 0.75rem;
     }
 
-    /* ── Spinner ── */
     .spinner {
       width: 16px;
       height: 16px;
@@ -185,13 +176,15 @@
 </head>
 <body>
 
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <div class="form-card">
   <h2 class="form-title">Restons en contact</h2>
   <p class="form-subtitle">Remplissez le formulaire, on vous répond rapidement.</p>
 
   <form id="leadForm" novalidate>
 
-    <!-- Prénom / Nom -->
     <div class="field-row">
       <div class="field">
         <label for="prenom">Prénom</label>
@@ -203,25 +196,21 @@
       </div>
     </div>
 
-    <!-- Email -->
     <div class="field">
       <label for="email">Adresse email <span style="color:#c00">*</span></label>
       <input type="email" id="email" name="email" placeholder="marie@exemple.fr" autocomplete="email" required />
     </div>
 
-    <!-- Téléphone -->
     <div class="field">
       <label for="tel">Téléphone</label>
       <input type="tel" id="tel" name="tel" placeholder="+33 6 00 00 00 00" autocomplete="tel" />
     </div>
 
-    <!-- Message -->
     <div class="field">
       <label for="message">Message</label>
       <textarea id="message" name="message" placeholder="Dites-nous en plus sur votre projet..."></textarea>
     </div>
 
-    <!-- RGPD -->
     <div class="rgpd-row">
       <input type="checkbox" id="rgpd" name="rgpd" required />
       <span>
@@ -231,13 +220,11 @@
       </span>
     </div>
 
-    <!-- Bouton -->
     <button type="submit" class="submit-btn" id="submitBtn">
       <span id="btnLabel">Envoyer ma demande</span>
       <div class="spinner" id="spinner"></div>
     </button>
 
-    <!-- Messages -->
     <div class="status-msg success" id="successMsg">
       ✅ Message envoyé ! Nous vous répondrons très prochainement.
     </div>
@@ -250,11 +237,25 @@
 </div>
 
 <script>
-  // ┌─────────────────────────────────────────────────────────────┐
-  // │  REMPLACE PAR TON ENDPOINT FORMSPREE                        │
-  // │  Exemple : https://formspree.io/f/xkgwabcd                  │
-  // └─────────────────────────────────────────────────────────────┘
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgodzvlo";
+  // ┌─────────────────────────────────────────────────────────────────┐
+  // │  REMPLACE CES 3 VALEURS PAR LES TIENNES (dashboard EmailJS)     │
+  // ├─────────────────────────────────────────────────────────────────┤
+  // │  1. Account → API Keys → Public Key                             │
+  // │  2. Email Services → ton service connecté → Service ID          │
+  // │  3. Email Templates → ton template → Template ID                │
+  // └─────────────────────────────────────────────────────────────────┘
+  const EMAILJS_PUBLIC_KEY  = "tBXDtAu12f2gfQ9j6";
+  const EMAILJS_SERVICE_ID  = "service_dlpo2us";
+  const EMAILJS_TEMPLATE_ID = "template_gwx9ggk";
+
+  // ┌─────────────────────────────────────────────────────────────────┐
+  // │  REMPLACE PAR TES DEUX ADRESSES EMAIL DESTINATAIRES             │
+  // └─────────────────────────────────────────────────────────────────┘
+  const EMAIL_DESTINATAIRE_1 = "laurent.benart13@gmail.com";
+  const EMAIL_DESTINATAIRE_2 = "rando2015@mail.com";
+
+  // Initialisation EmailJS
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
   const form       = document.getElementById("leadForm");
   const submitBtn  = document.getElementById("submitBtn");
@@ -266,7 +267,6 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Validation manuelle
     const email = document.getElementById("email").value.trim();
     const rgpd  = document.getElementById("rgpd").checked;
 
@@ -287,23 +287,36 @@
     successMsg.style.display = "none";
     errorMsg.style.display = "none";
 
+    // Données à envoyer (correspondent aux variables {{...}} du template EmailJS)
+    const templateParams = {
+      prenom      : document.getElementById("prenom").value.trim(),
+      nom         : document.getElementById("nom").value.trim(),
+      email       : email,
+      tel         : document.getElementById("tel").value.trim(),
+      message     : document.getElementById("message").value.trim(),
+      to_email_1  : EMAIL_DESTINATAIRE_1,
+      to_email_2  : EMAIL_DESTINATAIRE_2,
+    };
+
     try {
-      const data = new FormData(form);
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        body: data,
-        headers: { "Accept": "application/json" }
+      // Envoi vers destinataire 1
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        ...templateParams,
+        to_email: EMAIL_DESTINATAIRE_1,
       });
 
-      if (response.ok) {
-        form.reset();
-        successMsg.style.display = "block";
-        // Scroll doux vers le message de succès
-        successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      } else {
-        errorMsg.style.display = "block";
-      }
+      // Envoi vers destinataire 2
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        ...templateParams,
+        to_email: EMAIL_DESTINATAIRE_2,
+      });
+
+      form.reset();
+      successMsg.style.display = "block";
+      successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
     } catch (err) {
+      console.error("EmailJS error:", err);
       errorMsg.style.display = "block";
     } finally {
       submitBtn.disabled = false;
