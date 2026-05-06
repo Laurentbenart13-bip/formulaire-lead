@@ -131,6 +131,7 @@
     .submit-btn:hover { background: #333; }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* ── IMPORTANT : les messages sont cachés par défaut ── */
     .status-msg {
       display: none;
       margin-top: 1rem;
@@ -140,15 +141,13 @@
       text-align: center;
     }
 
-    .status-msg.success {
-      display: block;
+    .status-success {
       background: #ecfdf5;
       color: #166534;
       border: 1px solid #bbf7d0;
     }
 
-    .status-msg.error {
-      display: block;
+    .status-error {
       background: #fef2f2;
       color: #991b1b;
       border: 1px solid #fecaca;
@@ -176,7 +175,6 @@
 </head>
 <body>
 
-<!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <div class="form-card">
@@ -198,7 +196,7 @@
 
     <div class="field">
       <label for="email">Adresse email <span style="color:#c00">*</span></label>
-      <input type="email" id="email" name="email" placeholder="marie@exemple.fr" autocomplete="email" required />
+      <input type="email" id="email" name="email" placeholder="contact@exemple.fr" autocomplete="email" required />
     </div>
 
     <div class="field">
@@ -225,10 +223,11 @@
       <div class="spinner" id="spinner"></div>
     </button>
 
-    <div class="status-msg success" id="successMsg">
+    <!-- Messages cachés par défaut, affichés uniquement après envoi -->
+    <div class="status-msg status-success" id="successMsg">
       ✅ Message envoyé ! Nous vous répondrons très prochainement.
     </div>
-    <div class="status-msg error" id="errorMsg">
+    <div class="status-msg status-error" id="errorMsg">
       ❌ Une erreur est survenue. Veuillez réessayer ou nous écrire directement.
     </div>
 
@@ -238,23 +237,14 @@
 
 <script>
   // ┌─────────────────────────────────────────────────────────────────┐
-  // │  REMPLACE CES 3 VALEURS PAR LES TIENNES (dashboard EmailJS)     │
-  // ├─────────────────────────────────────────────────────────────────┤
-  // │  1. Account → API Keys → Public Key                             │
-  // │  2. Email Services → ton service connecté → Service ID          │
-  // │  3. Email Templates → ton template → Template ID                │
+  // │  REMPLACE CES VALEURS PAR LES TIENNES                           │
   // └─────────────────────────────────────────────────────────────────┘
-  const EMAILJS_PUBLIC_KEY  = "tBXDtAu12f2gfQ9j6";
-  const EMAILJS_SERVICE_ID  = "service_dlpo2us";
-  const EMAILJS_TEMPLATE_ID = "template_gwx9ggk";
+  const EMAILJS_PUBLIC_KEY  = "TA_PUBLIC_KEY_ICI";
+  const EMAILJS_SERVICE_ID  = "TON_SERVICE_ID_ICI";
+  const EMAILJS_TEMPLATE_ID = "TON_TEMPLATE_ID_ICI";
+  const EMAIL_DESTINATAIRE_1 = "email1@exemple.fr";
+  const EMAIL_DESTINATAIRE_2 = "email2@exemple.fr";
 
-  // ┌─────────────────────────────────────────────────────────────────┐
-  // │  REMPLACE PAR TES DEUX ADRESSES EMAIL DESTINATAIRES             │
-  // └─────────────────────────────────────────────────────────────────┘
-  const EMAIL_DESTINATAIRE_1 = "laurent.benart13@gmail.com";
-  const EMAIL_DESTINATAIRE_2 = "rando2015@mail.com";
-
-  // Initialisation EmailJS
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
   const form       = document.getElementById("leadForm");
@@ -264,8 +254,25 @@
   const successMsg = document.getElementById("successMsg");
   const errorMsg   = document.getElementById("errorMsg");
 
+  function hideMessages() {
+    successMsg.style.display = "none";
+    errorMsg.style.display   = "none";
+  }
+
+  function showSuccess() {
+    successMsg.style.display = "block";
+    errorMsg.style.display   = "none";
+    successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function showError() {
+    errorMsg.style.display   = "block";
+    successMsg.style.display = "none";
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    hideMessages();
 
     const email = document.getElementById("email").value.trim();
     const rgpd  = document.getElementById("rgpd").checked;
@@ -280,22 +287,16 @@
       return;
     }
 
-    // État chargement
     submitBtn.disabled = true;
     btnLabel.textContent = "Envoi en cours…";
     spinner.style.display = "block";
-    successMsg.style.display = "none";
-    errorMsg.style.display = "none";
 
-    // Données à envoyer (correspondent aux variables {{...}} du template EmailJS)
     const templateParams = {
-      prenom      : document.getElementById("prenom").value.trim(),
-      nom         : document.getElementById("nom").value.trim(),
-      email       : email,
-      tel         : document.getElementById("tel").value.trim(),
-      message     : document.getElementById("message").value.trim(),
-      to_email_1  : EMAIL_DESTINATAIRE_1,
-      to_email_2  : EMAIL_DESTINATAIRE_2,
+      prenom  : document.getElementById("prenom").value.trim(),
+      nom     : document.getElementById("nom").value.trim(),
+      email   : email,
+      tel     : document.getElementById("tel").value.trim(),
+      message : document.getElementById("message").value.trim(),
     };
 
     try {
@@ -312,12 +313,11 @@
       });
 
       form.reset();
-      successMsg.style.display = "block";
-      successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      showSuccess();
 
     } catch (err) {
       console.error("EmailJS error:", err);
-      errorMsg.style.display = "block";
+      showError();
     } finally {
       submitBtn.disabled = false;
       btnLabel.textContent = "Envoyer ma demande";
