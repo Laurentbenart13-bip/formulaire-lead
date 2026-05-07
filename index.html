@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Formulaire de contact</title>
+  <title>Formulaire d'inscription — TLD 700</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.6;
       background: transparent;
       color: #1a1a1a;
@@ -17,7 +17,7 @@
     }
 
     .form-card {
-      max-width: 520px;
+      max-width: 580px;
       margin: 0 auto;
       background: #ffffff;
       border: 1px solid #e5e5e5;
@@ -28,7 +28,7 @@
 
     .form-title {
       font-size: 22px;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 0.25rem;
     }
 
@@ -36,6 +36,21 @@
       font-size: 14px;
       color: #666;
       margin-bottom: 1.75rem;
+    }
+
+    .section {
+      border-top: 1px solid #efefef;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      margin-bottom: 1rem;
     }
 
     .field { margin-bottom: 1.25rem; }
@@ -46,10 +61,12 @@
       font-weight: 500;
       color: #555;
       margin-bottom: 6px;
-      letter-spacing: 0.02em;
     }
 
-    .field input,
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field input[type="date"],
     .field textarea {
       width: 100%;
       padding: 0.6rem 0.85rem;
@@ -70,7 +87,7 @@
 
     .field textarea {
       resize: vertical;
-      min-height: 90px;
+      min-height: 80px;
     }
 
     .field-row {
@@ -79,19 +96,146 @@
       gap: 12px;
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 480px) {
       .field-row { grid-template-columns: 1fr; }
     }
 
-    .rgpd-row {
+    /* ── Dates multiples ── */
+    .date-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .date-input-row input[type="date"] {
+      flex: 1;
+      margin: 0;
+    }
+
+    .btn-add-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.55rem 0.9rem;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .btn-add-date:hover { background: #333; }
+
+    .dates-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .date-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0f7ff;
+      border: 1px solid #b6d4f5;
+      color: #1a3a5c;
+      border-radius: 20px;
+      padding: 0.3rem 0.75rem;
+      font-size: 13px;
+    }
+
+    .date-tag button {
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .date-tag button:hover { color: #c00; }
+
+    .dates-empty {
+      font-size: 13px;
+      color: #aaa;
+      font-style: italic;
+    }
+
+    /* ── Documents ── */
+    .doc-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f7f9fc;
+      border: 1px solid #e0e8f0;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .doc-info { flex: 1; }
+
+    .doc-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .doc-desc {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .doc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.45rem 0.85rem;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .doc-btn:hover { background: #333; }
+
+    .doc-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Cases à cocher ── */
+    .check-row {
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      margin: 1.25rem 0 1.5rem;
+      margin-bottom: 1rem;
     }
 
-    .rgpd-row input[type="checkbox"] {
-      margin-top: 4px;
+    .check-row input[type="checkbox"] {
+      margin-top: 3px;
       flex-shrink: 0;
       accent-color: #1a1a1a;
       width: 16px;
@@ -99,21 +243,43 @@
       cursor: pointer;
     }
 
-    .rgpd-row span {
-      font-size: 13px;
-      color: #666;
+    .check-row span {
+      font-size: 14px;
+      color: #333;
       line-height: 1.5;
     }
 
-    .rgpd-row a {
-      color: #1a1a1a;
-      text-decoration: underline;
-      text-underline-offset: 2px;
+    /* ── Encarts ── */
+    .info-box {
+      background: #fffbea;
+      border: 1px solid #f0d060;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 13px;
+      color: #6b5000;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
     }
 
+    .info-box strong { color: #4a3500; }
+
+    .rdv-box {
+      background: #f0f7ff;
+      border: 1px solid #b6d4f5;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 13px;
+      color: #1a3a5c;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .rdv-box strong { color: #0d2a4a; }
+
+    /* ── Bouton envoi ── */
     .submit-btn {
       width: 100%;
-      padding: 0.75rem 1rem;
+      padding: 0.8rem 1rem;
       background: #1a1a1a;
       color: #fff;
       border: none;
@@ -126,12 +292,12 @@
       justify-content: center;
       gap: 8px;
       transition: background 0.15s, opacity 0.15s;
+      margin-top: 1.5rem;
     }
 
     .submit-btn:hover { background: #333; }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── IMPORTANT : les messages sont cachés par défaut ── */
     .status-msg {
       display: none;
       margin-top: 1rem;
@@ -171,6 +337,177 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Erreurs inline ── */
+    .field-error {
+      display: none;
+      font-size: 12px;
+      color: #c00;
+      margin-top: 4px;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    .input-error {
+      border-color: #c00 !important;
+      background: #fff5f5 !important;
+    }
+
+    .check-error {
+      color: #c00;
+      font-size: 12px;
+      display: none;
+      margin-top: -0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .check-error.visible {
+      display: block;
+    }
+
+    .profil-error {
+      color: #c00;
+      font-size: 12px;
+      margin-top: -0.75rem;
+      margin-bottom: 0.75rem;
+      display: none;
+    }
+
+    .profil-error.visible {
+      display: block;
+    }
+
+
+    /* ── Choix profil ── */
+    .profil-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .profil-option {
+      flex: 1;
+      min-width: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0.85rem 1rem;
+      border: 2px solid #d4d4d4;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: #555;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      user-select: none;
+    }
+
+    .profil-option input[type="radio"] {
+      display: none;
+    }
+
+    .profil-option:has(input:checked) {
+      border-color: #1a1a1a;
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    .profil-section {
+      display: none;
+    }
+
+    .profil-section.visible {
+      display: block;
+    }
+
+
+    /* ── Encart alerte rouge ── */
+    .alert-box {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 13px;
+      color: #991b1b;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .alert-box strong { color: #7f1d1d; }
+
+
+    /* ── Mode de règlement ── */
+    .reglement-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .reglement-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.6rem 1rem;
+      border: 1.5px solid #d4d4d4;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .reglement-option input[type="radio"] {
+      accent-color: #1a1a1a;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .reglement-option:has(input:checked) {
+      border-color: #1a1a1a;
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+
+
+    /* ── Bloc prix ── */
+    .prix-box {
+      display: none;
+      margin-top: 0.75rem;
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 15px;
+      color: #166534;
+    }
+
+    .prix-box .prix-label {
+      font-size: 13px;
+      color: #166534;
+      margin-bottom: 2px;
+    }
+
+    .prix-box .prix-montant {
+      font-size: 22px;
+      font-weight: 700;
+      color: #166534;
+    }
+
+    .prix-box .prix-detail {
+      font-size: 12px;
+      color: #4ade80;
+      margin-top: 2px;
+    }
+
+    .required { color: #c00; }
   </style>
 </head>
 <body>
@@ -178,60 +515,219 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <div class="form-card">
-  <h2 class="form-title">Restons en contact</h2>
-  <p class="form-subtitle">Remplissez le formulaire, on vous répond rapidement.</p>
+  <h1 class="form-title">Inscription — TLD 700</h1>
+  <p class="form-subtitle">Complétez le formulaire et téléchargez les documents demandés.</p>
+
+  <div class="alert-box">
+    🚫 <strong>Règles de sécurité :</strong> Calibre maximum autorisé <strong>.338</strong>. Alcool et drogues <strong>strictement interdits</strong> pendant toute la durée de la session de tir.
+  </div>
+
+  <div class="rdv-box">
+    📍 <strong>Rendez-vous à 9h — Col Notre Dame.</strong> Les points GPS sont disponibles sur le site.
+  </div>
 
   <form id="leadForm" novalidate>
 
+    <!-- Infos personnelles -->
+    <div class="section-title">Informations personnelles</div>
+
     <div class="field-row">
       <div class="field">
-        <label for="prenom">Prénom</label>
-        <input type="text" id="prenom" name="prenom" placeholder="Marie" autocomplete="given-name" />
+        <label for="prenom">Prénom <span class="required">*</span></label>
+        <input type="text" id="prenom" required name="prenom" placeholder="Marie" autocomplete="given-name" />
+        <span class="field-error" id="errPrenom">Veuillez saisir votre prénom.</span>
       </div>
       <div class="field">
-        <label for="nom">Nom</label>
-        <input type="text" id="nom" name="nom" placeholder="Dupont" autocomplete="family-name" />
+        <label for="nom">Nom <span class="required">*</span></label>
+        <input type="text" id="nom" required name="nom" placeholder="Dupont" autocomplete="family-name" />
+        <span class="field-error" id="errNom">Veuillez saisir votre nom.</span>
       </div>
     </div>
 
     <div class="field">
-      <label for="email">Adresse email <span style="color:#c00">*</span></label>
-      <input type="email" id="email" name="email" placeholder="contact@exemple.fr" autocomplete="email" required />
+      <label for="email">Adresse email <span class="required">*</span></label>
+      <input type="email" id="email" name="email" placeholder="marie@exemple.fr" autocomplete="email" required />
+      <span class="field-error" id="errEmail">Veuillez saisir une adresse email valide.</span>
     </div>
 
     <div class="field">
-      <label for="tel">Téléphone</label>
-      <input type="tel" id="tel" name="tel" placeholder="+33 6 00 00 00 00" autocomplete="tel" />
+      <label for="tel">Téléphone <span class="required">*</span></label>
+      <input type="tel" id="tel" name="tel" placeholder="+33 6 00 00 00 00" autocomplete="tel" required />
+      <span class="field-error" id="errTel">Veuillez saisir votre numéro de téléphone.</span>
     </div>
 
     <div class="field">
-      <label for="message">Message</label>
-      <textarea id="message" name="message" placeholder="Dites-nous en plus sur votre projet..."></textarea>
+      <label for="licence">Numéro de Licence FFTir (saison en cours) <span class="required">*</span></label>
+      <input type="text" id="licence" name="licence" placeholder="Ex : 123456" />
+      <span class="field-error" id="errLicence">Veuillez saisir votre numéro de licence FFTir.</span>
     </div>
 
-    <div class="rgpd-row">
-      <input type="checkbox" id="rgpd" name="rgpd" required />
-      <span>
-        J'accepte que mes données soient utilisées pour me recontacter,
-        conformément à la <a href="#" target="_blank">politique de confidentialité</a>.
-        <span style="color:#c00">*</span>
-      </span>
+    <!-- Dates de session -->
+    <div class="section">
+      <div class="section-title">Dates de session souhaitées <span class="required">*</span></div>
+
+      <div class="field">
+        <label for="dateInput">Sélectionnez une date puis cliquez sur "+"</label>
+        <div class="date-input-row">
+          <input type="date" id="dateInput" />
+          <button type="button" class="btn-add-date" onclick="ajouterDate()">
+            + Ajouter
+          </button>
+        </div>
+        <div class="dates-tags" id="datesTags">
+          <span class="dates-empty" id="datesEmpty">Aucune date sélectionnée</span>
+        </div>
+        <span class="field-error" id="errDates">Veuillez ajouter au moins une date de session.</span>
+        <div class="prix-box" id="prixBox">
+          <div class="prix-label">💶 Montant total à régler</div>
+          <div class="prix-montant" id="prixMontant">0 €</div>
+          <div class="prix-detail" id="prixDetail"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Choix profil -->
+    <div class="section">
+      <div class="section-title">Vous êtes <span class="required">*</span></div>
+      <div class="profil-options">
+        <label class="profil-option" onclick="afficherProfil('tireur')">
+          <input type="radio" name="profil" id="profilTireur" value="Tireur" />
+          🎯 Tireur
+        </label>
+        <label class="profil-option" onclick="afficherProfil('chasseur')">
+          <input type="radio" name="profil" id="profilChasseur" value="Chasseur" />
+          🦌 Chasseur
+        </label>
+      </div>
+      <span class="profil-error" id="errProfil">Veuillez indiquer si vous êtes tireur ou chasseur.</span>
+
+      <!-- Documents communs -->
+      <div class="profil-section visible" id="docsCommuns">
+        <div class="section-title" style="margin-bottom:0.75rem;">Documents obligatoires</div>
+
+        <div class="doc-row">
+          <div class="doc-info">
+            <div class="doc-label">Pièce d'identité <span class="required">*</span></div>
+            <div class="doc-desc">Carte nationale d'identité ou passeport</div>
+          </div>
+          <a class="doc-btn" href="LIEN_PIECE_IDENTITE_ICI" download target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger
+          </a>
+        </div>
+
+        <div class="doc-row">
+          <div class="doc-info">
+            <div class="doc-label">Fiche SIA — Situation de l'arme <span class="required">*</span></div>
+            <div class="doc-desc">Fiche de situation de l'arme à compléter</div>
+          </div>
+          <a class="doc-btn" href="LIEN_FICHE_SIA_ICI" download target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger
+          </a>
+        </div>
+      </div>
+
+      <!-- Documents spécifiques chasseur -->
+      <div class="profil-section" id="docsChasseur">
+        <div class="section-title" style="margin-top:1rem; margin-bottom:0.75rem;">Documents spécifiques chasseur</div>
+
+        <div class="doc-row">
+          <div class="doc-info">
+            <div class="doc-label">Permis de chasse avec validation <span class="required">*</span></div>
+            <div class="doc-desc">Permis en cours de validité avec tampon de validation</div>
+          </div>
+          <a class="doc-btn" href="LIEN_PERMIS_CHASSE_ICI" download target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger
+          </a>
+        </div>
+
+        <div class="doc-row">
+          <div class="doc-info">
+            <div class="doc-label">Attestation d'assurance tir sur cible <span class="required">*</span></div>
+            <div class="doc-desc">⚠️ Le ballon trap n'est pas considéré comme tir sur cible</div>
+          </div>
+          <a class="doc-btn" href="LIEN_ASSURANCE_ICI" download target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acceptations -->
+    <div class="section">
+      <div class="section-title">Acceptations</div>
+
+      <div class="check-row">
+        <input type="checkbox" id="reglement" name="reglement" required />
+        <span>J'ai lu et j'accepte le <strong>règlement intérieur</strong> de l'association TLD 700. <span class="required">*</span></span>
+      </div>
+      <span class="check-error" id="errReglement">Vous devez accepter le règlement intérieur.</span>
+
+      <div class="check-row">
+        <input type="checkbox" id="image" name="image" />
+        <span>J'autorise l'association TLD 700 à utiliser les photos et vidéos prises lors des sessions sur lesquelles je pourrais apparaître, à des fins de communication (site internet, réseaux sociaux, publications de l'association). Ce droit est accordé à titre gratuit et sans limitation de durée.</span>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="rgpd" name="rgpd" required />
+        <span>J'accepte que mes données soient utilisées pour me recontacter, conformément à la <a href="https://laurentbenart13-bip.github.io/formulaire-lead/politique-confidentialite.html" target="_blank">politique de confidentialité</a>. <span class="required">*</span></span>
+      </div>
+      <span class="check-error" id="errRgpd">Vous devez accepter la politique de confidentialité.</span>
+    </div>
+
+    <!-- Message libre -->
+    <div class="section">
+      <div class="field">
+        <label for="message">Message (optionnel)</label>
+        <textarea id="message" name="message" placeholder="Une question ou information complémentaire ?"></textarea>
+      </div>
+    </div>
+
+    <!-- Politique d'annulation -->
+    <div class="section">
+      <div class="section-title">Politique d'annulation</div>
+      <div class="check-row">
+        <input type="checkbox" id="annulation" name="annulation" required />
+        <span>Je prends note que toute annulation <strong>moins d'une semaine</strong> avant la session ne sera pas remboursée, sauf sur présentation d'un certificat médical. <span class="required">*</span></span>
+      </div>
+      <span class="check-error" id="errAnnulation">Vous devez accepter la politique d'annulation.</span>
+    </div>
+
+    <!-- Mode de règlement -->
+    <div class="section">
+      <div class="section-title">Mode de règlement <span class="required">*</span></div>
+      <div class="field">
+        <label>Choisissez votre mode de paiement</label>
+        <div class="reglement-options">
+          <label class="reglement-option">
+            <input type="radio" name="reglement_mode" id="reglementCheque" value="Chèque" />
+            🏦 Chèque
+          </label>
+          <label class="reglement-option">
+            <input type="radio" name="reglement_mode" id="reglementVirement" value="Virement bancaire" />
+            💸 Virement bancaire
+          </label>
+        </div>
+      </div>
     </div>
 
     <button type="submit" class="submit-btn" id="submitBtn">
-      <span id="btnLabel">Envoyer ma demande</span>
+      <span id="btnLabel">Envoyer mon inscription</span>
       <div class="spinner" id="spinner"></div>
     </button>
 
-    <!-- Messages cachés par défaut, affichés uniquement après envoi -->
     <div class="status-msg status-success" id="successMsg">
-      ✅ Message envoyé ! Nous vous répondrons très prochainement.
+      ✅ Inscription envoyée ! Nous vous confirmerons votre participation très prochainement.
     </div>
     <div class="status-msg status-error" id="errorMsg">
-      ❌ Une erreur est survenue. Veuillez réessayer ou nous écrire directement.
+      ❌ Une erreur est survenue. Veuillez réessayer ou nous contacter directement.
     </div>
 
-    <p class="form-note">Champ * obligatoire — données protégées & jamais revendues</p>
+    <p class="form-note">Champs <span class="required">*</span> obligatoires — données protégées & jamais revendues</p>
+
   </form>
 </div>
 
@@ -239,14 +735,106 @@
   // ┌─────────────────────────────────────────────────────────────────┐
   // │  REMPLACE CES VALEURS PAR LES TIENNES                           │
   // └─────────────────────────────────────────────────────────────────┘
-  const EMAILJS_PUBLIC_KEY  = "tBXDtAu12f2gfQ9j6";
-  const EMAILJS_SERVICE_ID  = "service_dlpo2us";
-  const EMAILJS_TEMPLATE_ID = "template_gwx9ggk";
-  const EMAIL_DESTINATAIRE_1 = "laurent.benart13@gmail.com";
-  const EMAIL_DESTINATAIRE_2 = "ch.bois@mail.com";
+  const EMAILJS_PUBLIC_KEY   = "tBXDtAu12f2gfQ9j6";
+  const EMAILJS_SERVICE_ID   = "service_dlpo2us";
+  const EMAILJS_TEMPLATE_ID  = "template_gwx9ggk";
+  const EMAIL_DESTINATAIRE_1 = "c.bois73@pm.me";
+  const EMAIL_DESTINATAIRE_2 = "audas2011@live.fr";
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
+  // ── Gestion des dates ──
+  // ── Gestion profil tireur/chasseur ──
+  function afficherProfil(profil) {
+    const docsChasseur = document.getElementById("docsChasseur");
+    if (profil === "chasseur") {
+      docsChasseur.classList.add("visible");
+    } else {
+      docsChasseur.classList.remove("visible");
+    }
+  }
+
+  const PRIX_PAR_JOURNEE = 80;
+  const datesSelectionnees = [];
+
+  function mettreAJourPrix() {
+    const nb = datesSelectionnees.length;
+    const prixBox = document.getElementById("prixBox");
+    const prixMontant = document.getElementById("prixMontant");
+    const prixDetail = document.getElementById("prixDetail");
+
+    if (nb === 0) {
+      prixBox.style.display = "none";
+    } else {
+      const total = nb * PRIX_PAR_JOURNEE;
+      prixBox.style.display = "block";
+      prixMontant.textContent = total + " €";
+      prixDetail.textContent = nb + " journée" + (nb > 1 ? "s" : "") + " × " + PRIX_PAR_JOURNEE + " € / journée";
+    }
+  }
+
+  function ajouterDate() {
+    const input = document.getElementById("dateInput");
+    const valeur = input.value;
+
+    if (!valeur) {
+      alert("Veuillez sélectionner une date.");
+      return;
+    }
+
+    if (datesSelectionnees.includes(valeur)) {
+      alert("Cette date est déjà ajoutée.");
+      return;
+    }
+
+    datesSelectionnees.push(valeur);
+    input.value = "";
+    afficherDates();
+  }
+
+  function supprimerDate(date) {
+    const index = datesSelectionnees.indexOf(date);
+    if (index > -1) datesSelectionnees.splice(index, 1);
+    afficherDates();
+  }
+
+  function afficherDates() {
+    mettreAJourPrix();
+    const container = document.getElementById("datesTags");
+    const empty     = document.getElementById("datesEmpty");
+
+    container.innerHTML = "";
+
+    if (datesSelectionnees.length === 0) {
+      container.innerHTML = '<span class="dates-empty" id="datesEmpty">Aucune date sélectionnée</span>';
+      return;
+    }
+
+    const triees = [...datesSelectionnees].sort();
+    triees.forEach(date => {
+      const formatted = new Date(date + "T00:00:00").toLocaleDateString("fr-FR", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      });
+      const tag = document.createElement("div");
+      tag.className = "date-tag";
+      tag.innerHTML = `
+        <span>📅 ${formatted}</span>
+        <button type="button" onclick="supprimerDate('${date}')" title="Supprimer">✕</button>
+      `;
+      container.appendChild(tag);
+    });
+  }
+
+  function formaterDatesEmail() {
+    if (datesSelectionnees.length === 0) return "Aucune date sélectionnée";
+    return [...datesSelectionnees].sort().map(date =>
+      new Date(date + "T00:00:00").toLocaleDateString("fr-FR", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      })
+    ).join(", ");
+  }
+
+  // ── Gestion du formulaire ──
   const form       = document.getElementById("leadForm");
   const submitBtn  = document.getElementById("submitBtn");
   const spinner    = document.getElementById("spinner");
@@ -274,45 +862,74 @@
     e.preventDefault();
     hideMessages();
 
-    const email = document.getElementById("email").value.trim();
-    const rgpd  = document.getElementById("rgpd").checked;
+    const email      = document.getElementById("email").value.trim();
+    const licence    = document.getElementById("licence").value.trim();
+    const reglement  = document.getElementById("reglement").checked;
+    const annulation = document.getElementById("annulation").checked;
+    const rgpd       = document.getElementById("rgpd").checked;
 
-    if (!email) {
-      alert("L'adresse email est obligatoire.");
-      return;
-    }
+    const profil = document.querySelector('input[name="profil"]:checked');
+    if (!profil) { alert("Veuillez indiquer si vous êtes tireur ou chasseur."); return; }
 
-    if (!rgpd) {
-      alert("Veuillez accepter la politique de confidentialité.");
-      return;
-    }
+    if (!email)      { alert("L'adresse email est obligatoire."); return; }
+    const tel = document.getElementById("tel").value.trim();
+    if (!tel)        { alert("Le numéro de téléphone est obligatoire."); return; }
+    if (!licence)    { alert("Le numéro de licence FFTir est obligatoire."); return; }
+    if (datesSelectionnees.length === 0) { alert("Veuillez ajouter au moins une date de session."); return; }
+    if (!reglement)  { alert("Vous devez accepter le règlement intérieur."); return; }
+    if (!annulation) { alert("Vous devez accepter la politique d'annulation."); return; }
+    if (!rgpd)       { alert("Vous devez accepter la politique de confidentialité."); return; }
+
+    const reglementMode = document.querySelector('input[name="reglement_mode"]:checked');
+    if (!reglementMode)  { alert("Veuillez choisir un mode de règlement."); return; }
 
     submitBtn.disabled = true;
     btnLabel.textContent = "Envoi en cours…";
     spinner.style.display = "block";
 
+    const droitImage = document.getElementById("image").checked ? "✅ Autorisé" : "❌ Refusé";
+
     const templateParams = {
-      prenom  : document.getElementById("prenom").value.trim(),
+      profil      : profil ? profil.value : "",
+      prenom      : document.getElementById("prenom").value.trim(),
       nom     : document.getElementById("nom").value.trim(),
       email   : email,
       tel     : document.getElementById("tel").value.trim(),
+      licence     : licence,
+      dates       : formaterDatesEmail(),
+      droit_image : droitImage,
+      reglement_mode : reglementMode ? reglementMode.value : "Non renseigné",
+      lien_validation : (() => {
+        const base = "https://laurentbenart13-bip.github.io/formulaire-lead/validation.html";
+        const p = new URLSearchParams({
+          token          : "bidmYr-1vocwo-nacdur",
+          prenom         : document.getElementById("prenom").value.trim(),
+          nom            : document.getElementById("nom").value.trim(),
+          email          : document.getElementById("email").value.trim(),
+          tel            : document.getElementById("tel").value.trim(),
+          profil         : profil ? profil.value : "",
+          licence        : document.getElementById("licence").value.trim(),
+          dates          : formaterDatesEmail(),
+          prix           : (datesSelectionnees.length * PRIX_PAR_JOURNEE) + "€",
+          reglement_mode : reglementMode ? reglementMode.value : "",
+        });
+        return base + "?" + p.toString();
+      })(),
+      prix        : (datesSelectionnees.length * PRIX_PAR_JOURNEE) + " €  (" + datesSelectionnees.length + " journée" + (datesSelectionnees.length > 1 ? "s" : "") + " × 80 €)",
       message : document.getElementById("message").value.trim(),
     };
 
     try {
-      // Envoi vers destinataire 1
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        ...templateParams,
-        to_email: EMAIL_DESTINATAIRE_1,
+        ...templateParams, to_email: EMAIL_DESTINATAIRE_1,
       });
-
-      // Envoi vers destinataire 2
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        ...templateParams,
-        to_email: EMAIL_DESTINATAIRE_2,
+        ...templateParams, to_email: EMAIL_DESTINATAIRE_2,
       });
 
       form.reset();
+      datesSelectionnees.length = 0;
+      afficherDates();
       showSuccess();
 
     } catch (err) {
@@ -320,7 +937,7 @@
       showError();
     } finally {
       submitBtn.disabled = false;
-      btnLabel.textContent = "Envoyer ma demande";
+      btnLabel.textContent = "Envoyer mon inscription";
       spinner.style.display = "none";
     }
   });
