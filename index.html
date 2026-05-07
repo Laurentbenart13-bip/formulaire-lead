@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <title>Inscription session de tir — TLD 700 Montagnol</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,11 +45,7 @@
       margin-bottom: 1.75rem;
     }
 
-    .section {
-      border-top: 1px solid #efefef;
-      margin-top: 1.5rem;
-      padding-top: 1.25rem;
-    }
+    .section { border-top: 1px solid #efefef; margin-top: 1.5rem; padding-top: 1.25rem; }
 
     .section-title {
       font-size: 13px;
@@ -86,503 +82,152 @@
       outline: none;
     }
 
-    .field input:focus,
-    .field textarea:focus {
-      border-color: #555;
-      background: #fff;
-    }
+    .field input:focus, .field textarea:focus { border-color: #555; background: #fff; }
+    .field textarea { resize: vertical; min-height: 80px; }
 
-    .field textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
 
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    @media (max-width: 480px) {
-      .field-row { grid-template-columns: 1fr; }
-    }
-
-    /* ── Dates multiples ── */
-    .date-input-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .date-input-row input[type="date"] {
-      flex: 1;
-      margin: 0;
-    }
+    /* ── Dates ── */
+    .date-input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 0.75rem; }
+    .date-input-row input[type="date"] { flex: 1; margin: 0; }
 
     .btn-add-date {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0.55rem 0.9rem;
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 0.55rem 0.9rem; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; transition: background 0.15s;
     }
-
     .btn-add-date:hover { background: #333; }
 
-    .dates-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 0.5rem;
-    }
+    .dates-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
 
     .date-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f0f7ff;
-      border: 1px solid #b6d4f5;
-      color: #1a3a5c;
-      border-radius: 20px;
-      padding: 0.3rem 0.75rem;
-      font-size: 13px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #f0f7ff; border: 1px solid #b6d4f5; color: #1a3a5c;
+      border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 13px;
     }
 
     .date-tag button {
-      background: none;
-      border: none;
-      color: #888;
-      cursor: pointer;
-      font-size: 15px;
-      line-height: 1;
-      padding: 0;
-      display: flex;
-      align-items: center;
+      background: none; border: none; color: #888; cursor: pointer;
+      font-size: 15px; line-height: 1; padding: 0; display: flex; align-items: center;
     }
-
     .date-tag button:hover { color: #c00; }
+    .dates-empty { font-size: 13px; color: #aaa; font-style: italic; }
 
-    .dates-empty {
-      font-size: 13px;
-      color: #aaa;
-      font-style: italic;
+    /* ── Prix ── */
+    .prix-box {
+      display: none; margin-top: 0.75rem;
+      background: #f0fdf4; border: 1px solid #86efac;
+      border-radius: 8px; padding: 0.75rem 1rem;
     }
+    .prix-label { font-size: 13px; color: #166534; margin-bottom: 2px; }
+    .prix-montant { font-size: 22px; font-weight: 700; color: #166534; }
+    .prix-detail { font-size: 12px; color: #4ade80; margin-top: 2px; }
 
-    /* ── Documents ── */
-    .doc-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: #f7f9fc;
-      border: 1px solid #e0e8f0;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      margin-bottom: 1rem;
+    /* ── Profil ── */
+    .profil-options { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+
+    .profil-option {
+      flex: 1; min-width: 140px; display: flex; align-items: center;
+      justify-content: center; gap: 10px; padding: 0.85rem 1rem;
+      border: 2px solid #d4d4d4; border-radius: 10px; cursor: pointer;
+      font-size: 15px; font-weight: 600; color: #555;
+      transition: border-color 0.15s, background 0.15s, color 0.15s; user-select: none;
     }
+    .profil-option input[type="radio"] { display: none; }
+    .profil-option:has(input:checked) { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
 
-    .doc-info { flex: 1; }
+    .profil-section { display: none; }
+    .profil-section.visible { display: block; }
 
-    .doc-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #1a1a1a;
+    /* ── Upload ── */
+    .upload-row {
+      background: #f7f9fc; border: 1px solid #e0e8f0;
+      border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem;
     }
+    .upload-label { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; display: block; }
+    .upload-desc { font-size: 12px; color: #888; margin-bottom: 8px; }
 
-    .doc-desc {
-      font-size: 12px;
-      color: #888;
-      margin-top: 2px;
+    .file-input-hidden { display: none; }
+
+    .upload-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 0.5rem 1rem; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: background 0.15s; margin-top: 6px;
     }
+    .upload-btn:hover { background: #333; }
 
-    .doc-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0.45rem 0.85rem;
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: background 0.15s;
-    }
-
-    .doc-btn:hover { background: #333; }
-
-    .doc-btn svg {
-      width: 14px;
-      height: 14px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
+    .upload-status { font-size: 12px; color: #166534; margin-top: 4px; display: none; }
+    .upload-status.visible { display: block; }
+    .upload-error { font-size: 12px; color: #c00; margin-top: 4px; display: none; }
+    .upload-error.visible { display: block; }
 
     /* ── Cases à cocher ── */
-    .check-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
+    .check-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 1rem; }
     .check-row input[type="checkbox"] {
-      margin-top: 3px;
-      flex-shrink: 0;
-      accent-color: #1a1a1a;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
+      margin-top: 3px; flex-shrink: 0; accent-color: #1a1a1a;
+      width: 16px; height: 16px; cursor: pointer;
     }
+    .check-row span { font-size: 14px; color: #333; line-height: 1.5; }
 
-    .check-row span {
-      font-size: 14px;
-      color: #333;
-      line-height: 1.5;
+    /* ── Mode règlement ── */
+    .reglement-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 0.5rem; }
+    .reglement-option {
+      display: flex; align-items: center; gap: 8px; padding: 0.6rem 1rem;
+      border: 1.5px solid #d4d4d4; border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: 500; color: #555;
+      transition: border-color 0.15s, background 0.15s; user-select: none;
     }
+    .reglement-option input[type="radio"] { accent-color: #1a1a1a; width: 16px; height: 16px; cursor: pointer; }
+    .reglement-option:has(input:checked) { border-color: #1a1a1a; background: #f5f5f5; color: #1a1a1a; }
 
     /* ── Encarts ── */
-    .info-box {
-      background: #fffbea;
-      border: 1px solid #f0d060;
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      font-size: 13px;
-      color: #6b5000;
-      margin-bottom: 1.25rem;
-      line-height: 1.6;
+    .alert-box {
+      background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px;
+      padding: 0.85rem 1rem; font-size: 13px; color: #991b1b;
+      margin-bottom: 1.25rem; line-height: 1.6;
     }
-
-    .info-box strong { color: #4a3500; }
+    .alert-box strong { color: #7f1d1d; }
 
     .rdv-box {
-      background: #f0f7ff;
-      border: 1px solid #b6d4f5;
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      font-size: 13px;
-      color: #1a3a5c;
-      margin-bottom: 1.25rem;
-      line-height: 1.6;
+      background: #f0f7ff; border: 1px solid #b6d4f5; border-radius: 8px;
+      padding: 0.85rem 1rem; font-size: 13px; color: #1a3a5c;
+      margin-bottom: 1.25rem; line-height: 1.6;
     }
-
     .rdv-box strong { color: #0d2a4a; }
+
+    /* ── Erreurs ── */
+    .field-error { display: none; font-size: 12px; color: #c00; margin-top: 4px; }
+    .field-error.visible { display: block; }
+    .input-error { border-color: #c00 !important; background: #fff5f5 !important; }
+    .check-error { color: #c00; font-size: 12px; display: none; margin-top: -0.5rem; margin-bottom: 0.75rem; }
+    .check-error.visible { display: block; }
+    .profil-error { color: #c00; font-size: 12px; margin-top: -0.75rem; margin-bottom: 0.75rem; display: none; }
+    .profil-error.visible { display: block; }
 
     /* ── Bouton envoi ── */
     .submit-btn {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: background 0.15s, opacity 0.15s;
-      margin-top: 1.5rem;
+      width: 100%; padding: 0.8rem 1rem; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 8px; transition: background 0.15s, opacity 0.15s; margin-top: 1.5rem;
     }
-
     .submit-btn:hover { background: #333; }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .status-msg {
-      display: none;
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .status-success {
-      background: #ecfdf5;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-
-    .status-error {
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-
-    .form-note {
-      font-size: 12px;
-      color: #999;
-      text-align: center;
-      margin-top: 0.75rem;
-    }
+    .status-msg { display: none; margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 14px; text-align: center; }
+    .status-success { background: #ecfdf5; color: #166534; border: 1px solid #bbf7d0; }
+    .status-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .form-note { font-size: 12px; color: #999; text-align: center; margin-top: 0.75rem; }
 
     .spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: none;
+      width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.6s linear infinite; display: none;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Upload documents ── */
-    .upload-row {
-      background: #f7f9fc;
-      border: 1px solid #e0e8f0;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .upload-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #1a1a1a;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    .upload-desc {
-      font-size: 12px;
-      color: #888;
-      margin-bottom: 8px;
-    }
-
-    /* Cacher l'input file natif */
-    .file-input-hidden {
-      display: none;
-    }
-
-    .upload-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0.5rem 1rem;
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s;
-      margin-top: 6px;
-    }
-
-    .upload-btn:hover { background: #333; }
-
-    .upload-status {
-      font-size: 12px;
-      color: #166534;
-      margin-top: 4px;
-      display: none;
-    }
-
-    .upload-status.visible {
-      display: block;
-    }
-
-    .upload-error {
-      font-size: 12px;
-      color: #c00;
-      margin-top: 4px;
-      display: none;
-    }
-
-    .upload-error.visible {
-      display: block;
-    }
-
-
-    /* ── Erreurs inline ── */
-    .field-error {
-      display: none;
-      font-size: 12px;
-      color: #c00;
-      margin-top: 4px;
-    }
-
-    .field-error.visible {
-      display: block;
-    }
-
-    .input-error {
-      border-color: #c00 !important;
-      background: #fff5f5 !important;
-    }
-
-    .check-error {
-      color: #c00;
-      font-size: 12px;
-      display: none;
-      margin-top: -0.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .check-error.visible {
-      display: block;
-    }
-
-    .profil-error {
-      color: #c00;
-      font-size: 12px;
-      margin-top: -0.75rem;
-      margin-bottom: 0.75rem;
-      display: none;
-    }
-
-    .profil-error.visible {
-      display: block;
-    }
-
-
-    /* ── Choix profil ── */
-    .profil-options {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .profil-option {
-      flex: 1;
-      min-width: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 0.85rem 1rem;
-      border: 2px solid #d4d4d4;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-      color: #555;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-      user-select: none;
-    }
-
-    .profil-option input[type="radio"] {
-      display: none;
-    }
-
-    .profil-option:has(input:checked) {
-      border-color: #1a1a1a;
-      background: #1a1a1a;
-      color: #fff;
-    }
-
-    .profil-section {
-      display: none;
-    }
-
-    .profil-section.visible {
-      display: block;
-    }
-
-
-    /* ── Encart alerte rouge ── */
-    .alert-box {
-      background: #fef2f2;
-      border: 1px solid #fca5a5;
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      font-size: 13px;
-      color: #991b1b;
-      margin-bottom: 1.25rem;
-      line-height: 1.6;
-    }
-
-    .alert-box strong { color: #7f1d1d; }
-
-
-    /* ── Mode de règlement ── */
-    .reglement-options {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
-    }
-
-    .reglement-option {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0.6rem 1rem;
-      border: 1.5px solid #d4d4d4;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      color: #555;
-      transition: border-color 0.15s, background 0.15s;
-      user-select: none;
-    }
-
-    .reglement-option input[type="radio"] {
-      accent-color: #1a1a1a;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .reglement-option:has(input:checked) {
-      border-color: #1a1a1a;
-      background: #f5f5f5;
-      color: #1a1a1a;
-    }
-
-
-    /* ── Bloc prix ── */
-    .prix-box {
-      display: none;
-      margin-top: 0.75rem;
-      background: #f0fdf4;
-      border: 1px solid #86efac;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 15px;
-      color: #166534;
-    }
-
-    .prix-box .prix-label {
-      font-size: 13px;
-      color: #166534;
-      margin-bottom: 2px;
-    }
-
-    .prix-box .prix-montant {
-      font-size: 22px;
-      font-weight: 700;
-      color: #166534;
-    }
-
-    .prix-box .prix-detail {
-      font-size: 12px;
-      color: #4ade80;
-      margin-top: 2px;
-    }
-
     .required { color: #c00; }
   </style>
 </head>
@@ -592,7 +237,7 @@
 
 <div class="form-card">
   <h1 class="form-title">Inscription session de tir<br>TLD 700 Montagnol</h1>
-  <p class="form-subtitle">Complétez le formulaire et téléchargez les documents demandés.</p>
+  <p class="form-subtitle">Complétez le formulaire et uploadez les documents demandés.</p>
 
   <div class="alert-box">
     🚫 <strong>Règles de sécurité :</strong> Calibre maximum autorisé <strong>.338</strong>. Alcool et drogues <strong>strictement interdits</strong> pendant toute la durée de la session de tir.
@@ -604,18 +249,17 @@
 
   <form id="leadForm" novalidate>
 
-    <!-- Infos personnelles -->
     <div class="section-title">Informations personnelles</div>
 
     <div class="field-row">
       <div class="field">
         <label for="prenom">Prénom <span class="required">*</span></label>
-        <input type="text" id="prenom" required name="prenom" placeholder="Marie" autocomplete="given-name" />
+        <input type="text" id="prenom" name="prenom" placeholder="Marie" autocomplete="given-name" required />
         <span class="field-error" id="errPrenom">Veuillez saisir votre prénom.</span>
       </div>
       <div class="field">
         <label for="nom">Nom <span class="required">*</span></label>
-        <input type="text" id="nom" required name="nom" placeholder="Dupont" autocomplete="family-name" />
+        <input type="text" id="nom" name="nom" placeholder="Dupont" autocomplete="family-name" required />
         <span class="field-error" id="errNom">Veuillez saisir votre nom.</span>
       </div>
     </div>
@@ -638,17 +282,14 @@
       <span class="field-error" id="errLicence">Veuillez saisir votre numéro de licence FFTir.</span>
     </div>
 
-    <!-- Dates de session -->
+    <!-- Dates -->
     <div class="section">
       <div class="section-title">Dates de session souhaitées <span class="required">*</span></div>
-
       <div class="field">
         <label for="dateInput">Sélectionnez une date puis cliquez sur "+"</label>
         <div class="date-input-row">
           <input type="date" id="dateInput" />
-          <button type="button" class="btn-add-date" onclick="ajouterDate()">
-            + Ajouter
-          </button>
+          <button type="button" class="btn-add-date" onclick="ajouterDate()">+ Ajouter</button>
         </div>
         <div class="dates-tags" id="datesTags">
           <span class="dates-empty" id="datesEmpty">Aucune date sélectionnée</span>
@@ -662,7 +303,7 @@
       </div>
     </div>
 
-    <!-- Choix profil -->
+    <!-- Profil + Documents -->
     <div class="section">
       <div class="section-title">Vous êtes <span class="required">*</span></div>
       <div class="profil-options">
@@ -684,49 +325,41 @@
         <div class="upload-row">
           <span class="upload-label">Pièce d'identité <span class="required">*</span></span>
           <div class="upload-desc">Carte nationale d'identité ou passeport (JPG, PNG ou PDF, max 5Mo)</div>
-          <input type="file" id="filePieceIdentite" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'pieceIdentite')" />
-          <button type="button" class="upload-btn" onclick="document.getElementById('filePieceIdentite').click()">
-            📎 Choisir un fichier
-          </button>
-          <div class="upload-status" id="statusPieceIdentite">✅ Fichier sélectionné</div>
+          <input type="file" id="filePieceIdentite" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'PieceIdentite')" />
+          <button type="button" class="upload-btn" onclick="document.getElementById('filePieceIdentite').click()">📎 Choisir un fichier</button>
+          <div class="upload-status" id="statusPieceIdentite">✅ Fichier uploadé</div>
           <div class="upload-error" id="errPieceIdentite">Veuillez uploader votre pièce d'identité.</div>
         </div>
 
         <div class="upload-row">
           <span class="upload-label">Fiche SIA — Situation de l'arme <span class="required">*</span></span>
           <div class="upload-desc">Fiche de situation de l'arme complétée (JPG, PNG ou PDF, max 5Mo)</div>
-          <input type="file" id="fileFicheSIA" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'ficheSIA')" />
-          <button type="button" class="upload-btn" onclick="document.getElementById('fileFicheSIA').click()">
-            📎 Choisir un fichier
-          </button>
-          <div class="upload-status" id="statusFicheSIA">✅ Fichier sélectionné</div>
+          <input type="file" id="fileFicheSIA" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'FicheSIA')" />
+          <button type="button" class="upload-btn" onclick="document.getElementById('fileFicheSIA').click()">📎 Choisir un fichier</button>
+          <div class="upload-status" id="statusFicheSIA">✅ Fichier uploadé</div>
           <div class="upload-error" id="errFicheSIA">Veuillez uploader votre fiche SIA.</div>
         </div>
       </div>
 
-      <!-- Documents spécifiques chasseur -->
+      <!-- Documents chasseur -->
       <div class="profil-section" id="docsChasseur">
         <div class="section-title" style="margin-top:1rem; margin-bottom:0.75rem;">Documents spécifiques chasseur</div>
 
         <div class="upload-row">
           <span class="upload-label">Permis de chasse avec validation <span class="required">*</span></span>
-          <div class="upload-desc">Permis en cours de validité avec tampon de validation (JPG, PNG ou PDF, max 5Mo)</div>
-          <input type="file" id="filePermisChasse" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'permisChasse')" />
-          <button type="button" class="upload-btn" onclick="document.getElementById('filePermisChasse').click()">
-            📎 Choisir un fichier
-          </button>
-          <div class="upload-status" id="statusPermisChasse">✅ Fichier sélectionné</div>
+          <div class="upload-desc">Permis en cours de validité avec tampon (JPG, PNG ou PDF, max 5Mo)</div>
+          <input type="file" id="filePermisChasse" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'PermisChasse')" />
+          <button type="button" class="upload-btn" onclick="document.getElementById('filePermisChasse').click()">📎 Choisir un fichier</button>
+          <div class="upload-status" id="statusPermisChasse">✅ Fichier uploadé</div>
           <div class="upload-error" id="errPermisChasse">Veuillez uploader votre permis de chasse.</div>
         </div>
 
         <div class="upload-row">
           <span class="upload-label">Attestation d'assurance tir sur cible <span class="required">*</span></span>
           <div class="upload-desc">⚠️ Le ballon trap n'est pas considéré comme tir sur cible (JPG, PNG ou PDF, max 5Mo)</div>
-          <input type="file" id="fileAssurance" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'assurance')" />
-          <button type="button" class="upload-btn" onclick="document.getElementById('fileAssurance').click()">
-            📎 Choisir un fichier
-          </button>
-          <div class="upload-status" id="statusAssurance">✅ Fichier sélectionné</div>
+          <input type="file" id="fileAssurance" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="onFileChange(this, 'Assurance')" />
+          <button type="button" class="upload-btn" onclick="document.getElementById('fileAssurance').click()">📎 Choisir un fichier</button>
+          <div class="upload-status" id="statusAssurance">✅ Fichier uploadé</div>
           <div class="upload-error" id="errAssurance">Veuillez uploader votre attestation d'assurance.</div>
         </div>
       </div>
@@ -744,7 +377,7 @@
 
       <div class="check-row">
         <input type="checkbox" id="image" name="image" />
-        <span>J'autorise l'association TLD 700 à utiliser les photos et vidéos prises lors des sessions sur lesquelles je pourrais apparaître, à des fins de communication (site internet, réseaux sociaux, publications de l'association). Ce droit est accordé à titre gratuit et sans limitation de durée.</span>
+        <span>J'autorise l'association TLD 700 à utiliser les photos et vidéos prises lors des sessions sur lesquelles je pourrais apparaître, à des fins de communication (site internet, réseaux sociaux, publications). Ce droit est accordé à titre gratuit et sans limitation de durée.</span>
       </div>
 
       <div class="check-row">
@@ -754,15 +387,7 @@
       <span class="check-error" id="errRgpd">Vous devez accepter la politique de confidentialité.</span>
     </div>
 
-    <!-- Message libre -->
-    <div class="section">
-      <div class="field">
-        <label for="message">Message (optionnel)</label>
-        <textarea id="message" name="message" placeholder="Une question ou information complémentaire ?"></textarea>
-      </div>
-    </div>
-
-    <!-- Politique d'annulation -->
+    <!-- Politique annulation -->
     <div class="section">
       <div class="section-title">Politique d'annulation</div>
       <div class="check-row">
@@ -772,7 +397,7 @@
       <span class="check-error" id="errAnnulation">Vous devez accepter la politique d'annulation.</span>
     </div>
 
-    <!-- Mode de règlement -->
+    <!-- Mode règlement -->
     <div class="section">
       <div class="section-title">Mode de règlement <span class="required">*</span></div>
       <div class="field">
@@ -787,6 +412,15 @@
             💸 Virement bancaire
           </label>
         </div>
+      </div>
+      <span class="check-error" id="errReglementMode">Veuillez choisir un mode de règlement.</span>
+    </div>
+
+    <!-- Message libre -->
+    <div class="section">
+      <div class="field">
+        <label for="message">Message (optionnel)</label>
+        <textarea id="message" name="message" placeholder="Une question ou information complémentaire ?"></textarea>
       </div>
     </div>
 
@@ -808,51 +442,46 @@
 </div>
 
 <script>
-  // ┌─────────────────────────────────────────────────────────────────┐
-  // │  REMPLACE CES VALEURS PAR LES TIENNES                           │
-  // └─────────────────────────────────────────────────────────────────┘
-  const EMAILJS_PUBLIC_KEY   = "TA_PUBLIC_KEY_ICI";
-  const EMAILJS_SERVICE_ID   = "TON_SERVICE_ID_ICI";
-  const EMAILJS_TEMPLATE_ID  = "TON_TEMPLATE_ID_ICI";
-  const EMAIL_DESTINATAIRE_1 = "email1@exemple.fr";
-  const EMAIL_DESTINATAIRE_2 = "email2@exemple.fr";
+  // ── Configuration ──
+  const EMAILJS_PUBLIC_KEY   = "tBXDtAu12f2gfQ9j6";
+  const EMAILJS_SERVICE_ID   = "service_dlpo2us";
+  const EMAILJS_TEMPLATE_ID  = "template_gwx9ggk";
+  const EMAIL_DESTINATAIRE_1 = "c.bois73@pm.me";
+  const EMAIL_DESTINATAIRE_2 = "rando2015@mail.com";
+  const UPLOADCARE_KEY       = "c9d75257ae4335d97d3d";
+  const TOKEN_VALIDATION     = "bidmYr-1vocwo-nacdur";
+  const PRIX_PAR_JOURNEE     = 80;
+  const BASE_URL_VALIDATION  = "https://laurentbenart13-bip.github.io/formulaire-lead/validation.html";
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
-  // ── Gestion des dates ──
-  // ── Gestion fichiers natifs + upload Uploadcare ──
-  const uploadedFiles = {
-    pieceIdentite : null,
-    ficheSIA      : null,
-    permisChasse  : null,
-    assurance     : null,
-  };
+  // ── Upload Uploadcare ──
+  const uploadedFiles = { PieceIdentite: null, FicheSIA: null, PermisChasse: null, Assurance: null };
 
   async function uploadToUploadcare(file) {
     const formData = new FormData();
-    formData.append("UPLOADCARE_PUB_KEY", "c9d75257ae4335d97d3d");
+    formData.append("UPLOADCARE_PUB_KEY", UPLOADCARE_KEY);
     formData.append("UPLOADCARE_STORE", "1");
     formData.append("file", file);
-    const res = await fetch("https://upload.uploadcare.com/base/", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("https://upload.uploadcare.com/base/", { method: "POST", body: formData });
     const data = await res.json();
+    if (!data.file) throw new Error("Upload échoué");
     return "https://ucarecdn.com/" + data.file + "/";
   }
 
   async function onFileChange(input, key) {
     const file = input.files[0];
     if (!file) return;
-    const statusEl = document.getElementById("status" + key.charAt(0).toUpperCase() + key.slice(1));
-    const errEl    = document.getElementById("err"    + key.charAt(0).toUpperCase() + key.slice(1));
+    const keyLower = key.charAt(0).toLowerCase() + key.slice(1);
+    const statusEl = document.getElementById("status" + key);
+    const errEl    = document.getElementById("err"    + key);
     statusEl.textContent = "⏳ Upload en cours...";
     statusEl.classList.add("visible");
     errEl.classList.remove("visible");
     try {
       const url = await uploadToUploadcare(file);
       uploadedFiles[key] = url;
-      console.log("URL uploadcare [" + key + "] :", url);
+      console.log("URL [" + key + "] :", url);
       statusEl.textContent = "✅ " + file.name + " uploadé";
     } catch(e) {
       statusEl.classList.remove("visible");
@@ -861,7 +490,7 @@
     }
   }
 
-  // ── Gestion profil tireur/chasseur ──
+  // ── Profil tireur/chasseur ──
   function afficherProfil(profil) {
     const docsChasseur = document.getElementById("docsChasseur");
     if (profil === "chasseur") {
@@ -871,39 +500,28 @@
     }
   }
 
-  const PRIX_PAR_JOURNEE = 80;
+  // ── Dates ──
   const datesSelectionnees = [];
 
   function mettreAJourPrix() {
     const nb = datesSelectionnees.length;
     const prixBox = document.getElementById("prixBox");
     const prixMontant = document.getElementById("prixMontant");
-    const prixDetail = document.getElementById("prixDetail");
-
+    const prixDetail  = document.getElementById("prixDetail");
     if (nb === 0) {
       prixBox.style.display = "none";
     } else {
-      const total = nb * PRIX_PAR_JOURNEE;
       prixBox.style.display = "block";
-      prixMontant.textContent = total + " €";
-      prixDetail.textContent = nb + " journée" + (nb > 1 ? "s" : "") + " × " + PRIX_PAR_JOURNEE + " € / journée";
+      prixMontant.textContent = (nb * PRIX_PAR_JOURNEE) + " €";
+      prixDetail.textContent  = nb + " journée" + (nb > 1 ? "s" : "") + " × " + PRIX_PAR_JOURNEE + " € / journée";
     }
   }
 
   function ajouterDate() {
-    const input = document.getElementById("dateInput");
+    const input  = document.getElementById("dateInput");
     const valeur = input.value;
-
-    if (!valeur) {
-      alert("Veuillez sélectionner une date.");
-      return;
-    }
-
-    if (datesSelectionnees.includes(valeur)) {
-      alert("Cette date est déjà ajoutée.");
-      return;
-    }
-
+    if (!valeur) { alert("Veuillez sélectionner une date."); return; }
+    if (datesSelectionnees.includes(valeur)) { alert("Cette date est déjà ajoutée."); return; }
     datesSelectionnees.push(valeur);
     input.value = "";
     afficherDates();
@@ -918,26 +536,18 @@
   function afficherDates() {
     mettreAJourPrix();
     const container = document.getElementById("datesTags");
-    const empty     = document.getElementById("datesEmpty");
-
     container.innerHTML = "";
-
     if (datesSelectionnees.length === 0) {
-      container.innerHTML = '<span class="dates-empty" id="datesEmpty">Aucune date sélectionnée</span>';
+      container.innerHTML = '<span class="dates-empty">Aucune date sélectionnée</span>';
       return;
     }
-
-    const triees = [...datesSelectionnees].sort();
-    triees.forEach(date => {
+    [...datesSelectionnees].sort().forEach(date => {
       const formatted = new Date(date + "T00:00:00").toLocaleDateString("fr-FR", {
         weekday: "long", day: "numeric", month: "long", year: "numeric"
       });
       const tag = document.createElement("div");
       tag.className = "date-tag";
-      tag.innerHTML = `
-        <span>📅 ${formatted}</span>
-        <button type="button" onclick="supprimerDate('${date}')" title="Supprimer">✕</button>
-      `;
+      tag.innerHTML = `<span>📅 ${formatted}</span><button type="button" onclick="supprimerDate('${date}')" title="Supprimer">✕</button>`;
       container.appendChild(tag);
     });
   }
@@ -951,7 +561,7 @@
     ).join(", ");
   }
 
-  // ── Gestion du formulaire ──
+  // ── Formulaire ──
   const form       = document.getElementById("leadForm");
   const submitBtn  = document.getElementById("submitBtn");
   const spinner    = document.getElementById("spinner");
@@ -959,105 +569,109 @@
   const successMsg = document.getElementById("successMsg");
   const errorMsg   = document.getElementById("errorMsg");
 
-  function hideMessages() {
-    successMsg.style.display = "none";
-    errorMsg.style.display   = "none";
-  }
-
-  function showSuccess() {
-    successMsg.style.display = "block";
-    errorMsg.style.display   = "none";
-    successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-
-  function showError() {
-    errorMsg.style.display   = "block";
-    successMsg.style.display = "none";
-  }
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    hideMessages();
 
-    const email      = document.getElementById("email").value.trim();
-    const licence    = document.getElementById("licence").value.trim();
-    const reglement  = document.getElementById("reglement").checked;
-    const annulation = document.getElementById("annulation").checked;
-    const rgpd       = document.getElementById("rgpd").checked;
-
-    const profil = document.querySelector('input[name="profil"]:checked');
-    if (!profil) { alert("Veuillez indiquer si vous êtes tireur ou chasseur."); return; }
-
-    if (!email)      { alert("L'adresse email est obligatoire."); return; }
-    const tel = document.getElementById("tel").value.trim();
-    if (!tel)        { alert("Le numéro de téléphone est obligatoire."); return; }
-    if (!licence)    { alert("Le numéro de licence FFTir est obligatoire."); return; }
-    if (datesSelectionnees.length === 0) { alert("Veuillez ajouter au moins une date de session."); return; }
-    if (!reglement)  { alert("Vous devez accepter le règlement intérieur."); return; }
-    if (!annulation) { alert("Vous devez accepter la politique d'annulation."); return; }
-    if (!rgpd)       { alert("Vous devez accepter la politique de confidentialité."); return; }
-
+    const prenom       = document.getElementById("prenom").value.trim();
+    const nom          = document.getElementById("nom").value.trim();
+    const email        = document.getElementById("email").value.trim();
+    const tel          = document.getElementById("tel").value.trim();
+    const licence      = document.getElementById("licence").value.trim();
+    const reglement    = document.getElementById("reglement").checked;
+    const annulation   = document.getElementById("annulation").checked;
+    const rgpd         = document.getElementById("rgpd").checked;
+    const profil       = document.querySelector('input[name="profil"]:checked');
     const reglementMode = document.querySelector('input[name="reglement_mode"]:checked');
-    if (!reglementMode)  { alert("Veuillez choisir un mode de règlement."); return; }
+    const isChasseur   = document.getElementById("profilChasseur").checked;
+    const droitImage   = document.getElementById("image").checked ? "✅ Autorisé" : "❌ Refusé";
+
+    // Réinitialiser erreurs
+    document.querySelectorAll('.field-error, .check-error, .profil-error').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    successMsg.style.display = "none";
+    errorMsg.style.display   = "none";
+
+    let hasError = false;
+
+    if (!profil)  { document.getElementById("errProfil").classList.add("visible"); hasError = true; }
+    if (!prenom)  { document.getElementById("errPrenom").classList.add("visible"); document.getElementById("prenom").classList.add("input-error"); hasError = true; }
+    if (!nom)     { document.getElementById("errNom").classList.add("visible"); document.getElementById("nom").classList.add("input-error"); hasError = true; }
+    if (!email || !email.includes("@")) { document.getElementById("errEmail").classList.add("visible"); document.getElementById("email").classList.add("input-error"); hasError = true; }
+    if (!tel)     { document.getElementById("errTel").classList.add("visible"); document.getElementById("tel").classList.add("input-error"); hasError = true; }
+    if (!licence) { document.getElementById("errLicence").classList.add("visible"); document.getElementById("licence").classList.add("input-error"); hasError = true; }
+    if (datesSelectionnees.length === 0) { document.getElementById("errDates").classList.add("visible"); hasError = true; }
+    if (!uploadedFiles.PieceIdentite) { document.getElementById("errPieceIdentite").classList.add("visible"); hasError = true; }
+    if (!uploadedFiles.FicheSIA)      { document.getElementById("errFicheSIA").classList.add("visible"); hasError = true; }
+    if (isChasseur && !uploadedFiles.PermisChasse) { document.getElementById("errPermisChasse").classList.add("visible"); hasError = true; }
+    if (isChasseur && !uploadedFiles.Assurance)    { document.getElementById("errAssurance").classList.add("visible"); hasError = true; }
+    if (!reglement)    { document.getElementById("errReglement").classList.add("visible"); hasError = true; }
+    if (!rgpd)         { document.getElementById("errRgpd").classList.add("visible"); hasError = true; }
+    if (!annulation)   { document.getElementById("errAnnulation").classList.add("visible"); hasError = true; }
+    if (!reglementMode){ document.getElementById("errReglementMode").classList.add("visible"); hasError = true; }
+
+    if (hasError) {
+      const firstError = document.querySelector('.field-error.visible, .check-error.visible, .profil-error.visible');
+      if (firstError) firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
 
     submitBtn.disabled = true;
     btnLabel.textContent = "Envoi en cours…";
     spinner.style.display = "block";
 
-    const droitImage = document.getElementById("image").checked ? "✅ Autorisé" : "❌ Refusé";
+    const prixTotal = datesSelectionnees.length * PRIX_PAR_JOURNEE;
+
+    const lienValidation = (() => {
+      const p = new URLSearchParams({
+        token          : TOKEN_VALIDATION,
+        prenom         : prenom,
+        nom            : nom,
+        email          : email,
+        tel            : tel,
+        profil         : profil ? profil.value : "",
+        licence        : licence,
+        dates          : formaterDatesEmail(),
+        prix           : prixTotal + " €",
+        reglement_mode : reglementMode ? reglementMode.value : "",
+      });
+      return BASE_URL_VALIDATION + "?" + p.toString();
+    })();
 
     const templateParams = {
-      profil      : profil ? profil.value : "",
-      prenom      : document.getElementById("prenom").value.trim(),
-      nom     : document.getElementById("nom").value.trim(),
-      email   : email,
-      tel     : document.getElementById("tel").value.trim(),
-      licence     : licence,
-      dates       : formaterDatesEmail(),
-      droit_image : droitImage,
-      reglement_mode : reglementMode ? reglementMode.value : "Non renseigné",
-      piece_identite : uploadedFiles.pieceIdentite || "Non fourni",
-      fiche_sia      : uploadedFiles.ficheSIA || "Non fourni",
-      permis_chasse  : uploadedFiles.permisChasse || "Non applicable",
-      assurance      : uploadedFiles.assurance || "Non applicable",
-      lien_validation : (() => {
-        const base = "https://laurentbenart13-bip.github.io/formulaire-lead/validation.html";
-        const p = new URLSearchParams({
-          token          : "bidmYr-1vocwo-nacdur",
-          prenom         : document.getElementById("prenom").value.trim(),
-          nom            : document.getElementById("nom").value.trim(),
-          email          : document.getElementById("email").value.trim(),
-          tel            : document.getElementById("tel").value.trim(),
-          profil         : profil ? profil.value : "",
-          licence        : document.getElementById("licence").value.trim(),
-          dates          : formaterDatesEmail(),
-          prix           : (datesSelectionnees.length * PRIX_PAR_JOURNEE) + "€",
-          reglement_mode : reglementMode ? reglementMode.value : "",
-        });
-        return base + "?" + p.toString();
-      })(),
-      prix        : (datesSelectionnees.length * PRIX_PAR_JOURNEE) + " €  (" + datesSelectionnees.length + " journée" + (datesSelectionnees.length > 1 ? "s" : "") + " × 80 €)",
-      message : document.getElementById("message").value.trim(),
+      profil         : profil ? profil.value : "",
+      prenom         : prenom,
+      nom            : nom,
+      email          : email,
+      tel            : tel,
+      licence        : licence,
+      dates          : formaterDatesEmail(),
+      prix           : prixTotal + " € (" + datesSelectionnees.length + " journée" + (datesSelectionnees.length > 1 ? "s" : "") + " × " + PRIX_PAR_JOURNEE + " €)",
+      reglement_mode : reglementMode ? reglementMode.value : "",
+      droit_image    : droitImage,
+      piece_identite : uploadedFiles.PieceIdentite || "Non fourni",
+      fiche_sia      : uploadedFiles.FicheSIA      || "Non fourni",
+      permis_chasse  : uploadedFiles.PermisChasse  || "Non applicable",
+      assurance      : uploadedFiles.Assurance     || "Non applicable",
+      lien_validation: lienValidation,
+      message        : document.getElementById("message").value.trim(),
     };
 
     try {
-      // Envoi séquentiel avec délai pour garantir les deux envois
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        ...templateParams, to_email: EMAIL_DESTINATAIRE_1,
-      });
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { ...templateParams, to_email: EMAIL_DESTINATAIRE_1 });
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        ...templateParams, to_email: EMAIL_DESTINATAIRE_2,
-      });
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { ...templateParams, to_email: EMAIL_DESTINATAIRE_2 });
 
       form.reset();
       datesSelectionnees.length = 0;
       afficherDates();
-      showSuccess();
+      Object.keys(uploadedFiles).forEach(k => uploadedFiles[k] = null);
+      document.querySelectorAll('.upload-status').forEach(el => el.classList.remove('visible'));
+      successMsg.style.display = "block";
+      successMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
     } catch (err) {
       console.error("EmailJS error:", err);
-      showError();
+      errorMsg.style.display = "block";
     } finally {
       submitBtn.disabled = false;
       btnLabel.textContent = "Envoyer mon inscription";
