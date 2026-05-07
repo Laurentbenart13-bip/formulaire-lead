@@ -852,6 +852,7 @@
     try {
       const url = await uploadToUploadcare(file);
       uploadedFiles[key] = url;
+      console.log("URL uploadcare [" + key + "] :", url);
       statusEl.textContent = "✅ " + file.name + " uploadé";
     } catch(e) {
       statusEl.classList.remove("visible");
