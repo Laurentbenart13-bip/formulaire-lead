@@ -811,11 +811,11 @@
   // ┌─────────────────────────────────────────────────────────────────┐
   // │  REMPLACE CES VALEURS PAR LES TIENNES                           │
   // └─────────────────────────────────────────────────────────────────┘
-  const EMAILJS_PUBLIC_KEY   = "tBXDtAu12f2gfQ9j6";
-  const EMAILJS_SERVICE_ID   = "service_dlpo2us";
-  const EMAILJS_TEMPLATE_ID  = "template_gwx9ggk";
-  const EMAIL_DESTINATAIRE_1 = "c.bois73@pm.me";
-  const EMAIL_DESTINATAIRE_2 = "rando2015@mail.com";
+  const EMAILJS_PUBLIC_KEY   = "TA_PUBLIC_KEY_ICI";
+  const EMAILJS_SERVICE_ID   = "TON_SERVICE_ID_ICI";
+  const EMAILJS_TEMPLATE_ID  = "TON_TEMPLATE_ID_ICI";
+  const EMAIL_DESTINATAIRE_1 = "email1@exemple.fr";
+  const EMAIL_DESTINATAIRE_2 = "email2@exemple.fr";
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
@@ -1040,9 +1040,11 @@
     };
 
     try {
+      // Envoi séquentiel avec délai pour garantir les deux envois
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         ...templateParams, to_email: EMAIL_DESTINATAIRE_1,
       });
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         ...templateParams, to_email: EMAIL_DESTINATAIRE_2,
       });
