@@ -466,7 +466,8 @@
     const res = await fetch("https://upload.uploadcare.com/base/", { method: "POST", body: formData });
     const data = await res.json();
     if (!data.file) throw new Error("Upload échoué");
-    return "https://ucarecdn.com/" + data.file + "/";
+    // Utiliser l'URL CDN personnalisée du projet
+    return "https://3sap5vw77s.ucarecd.net/" + data.file + "/";
   }
 
   async function onFileChange(input, key) {
