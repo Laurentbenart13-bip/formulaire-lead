@@ -793,7 +793,7 @@
       permis_chasse  : uploadedFiles.PermisChasse  || "Non applicable",
       assurance      : uploadedFiles.Assurance     || "Non applicable",
       lien_validation    : lienValidation,
-      lien_verification  : licenceVerifyUrl ? '<a href="' + licenceVerifyUrl + '" target="_blank" style="background:#1a6634; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-weight:600; display:inline-block;">✅ Vérifier la licence FFTir</a>' : "Non fourni",
+      lien_verification  : licenceVerifyUrl || "Non fourni",
       message        : document.getElementById("message").value.trim(),
     };
 
