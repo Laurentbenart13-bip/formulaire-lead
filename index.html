@@ -324,20 +324,23 @@
     </div>
 
     <div class="field">
-      <label for="licence">Numéro de Licence FFTir (saison en cours) <span class="required">*</span></label>
-      <input type="text" id="licence" name="licence" placeholder="Ex : 82752302" />
+      <label>Licence FFTir (saison en cours) <span class="required">*</span></label>
+
+      <!-- Étape 1 : Upload de la licence -->
       <div class="licence-upload-row">
-        <div class="licence-upload-desc">📷 Ou uploadez votre licence pour remplissage automatique (PDF ou JPG)</div>
+        <div class="licence-upload-desc">📷 Étape 1 — Uploadez votre licence FFTir (PDF ou JPG) <span class="required">*</span></div>
         <input type="file" id="fileLicence" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="scanLicenceQR(this)" />
         <button type="button" class="upload-btn" onclick="document.getElementById('fileLicence').click()">
-          📎 Scanner ma licence FFTir
+          📎 Uploader ma licence FFTir
         </button>
-        <div class="licence-scan-status" id="licenceScanStatus">✅ Licence scannée avec succès !</div>
-        <div class="licence-scan-error" id="licenceScanError">⚠️ QR code non détecté — saisissez le numéro manuellement.</div>
-        <div class="licence-verify-link" id="licenceVerifyLink">
-          🔗 <a id="licenceVerifyAnchor" href="#" target="_blank">Vérifier la licence sur FFTir</a>
-        </div>
+        <div class="licence-scan-status" id="licenceScanStatus">✅ Licence uploadée et QR code détecté !</div>
+        <div class="licence-scan-error" id="licenceScanError">⚠️ QR code non détecté — assurez-vous que la photo est nette.</div>
       </div>
+      <span class="field-error" id="errLicenceScan">Veuillez uploader votre licence FFTir.</span>
+
+      <!-- Étape 2 : Saisie du numéro -->
+      <label for="licence" style="margin-top:0.75rem; display:block;">📝 Étape 2 — Saisissez votre numéro de licence <span class="required">*</span></label>
+      <input type="text" id="licence" name="licence" placeholder="Ex : 82752302" />
       <span class="field-error" id="errLicence">Veuillez saisir votre numéro de licence FFTir.</span>
     </div>
 
@@ -522,8 +525,7 @@
 
     const statusEl = document.getElementById("licenceScanStatus");
     const errorEl  = document.getElementById("licenceScanError");
-    const verifyEl = document.getElementById("licenceVerifyLink");
-    const anchorEl = document.getElementById("licenceVerifyAnchor");
+    // verifyEl et anchorEl supprimés - lien uniquement dans l'email admin
 
     statusEl.classList.remove("visible");
     errorEl.classList.remove("visible");
@@ -574,21 +576,12 @@
         // Le numéro est visible sur la licence, on demande confirmation
         statusEl.textContent = "✅ QR code détecté ! Vérifiez le numéro ci-dessous.";
 
-        // Afficher le lien de vérification
-        anchorEl.href = qrData;
-        verifyEl.classList.add("visible");
+        // Stocker le lien de vérification (invisible sur le formulaire, envoyé dans l'email)
+        licenceVerifyUrl = qrData;
 
-        // Pré-remplir si le champ est vide
-        const licenceInput = document.getElementById("licence");
-        if (!licenceInput.value) {
-          // Essayer d'extraire le numéro depuis l'URL
-          const match = qrData.match(/N=([^&]+)/);
-          if (match) {
-            // C'est un UUID, pas le numéro — on laisse l'utilisateur saisir
-          }
-          licenceInput.focus();
-          licenceInput.placeholder = "Saisissez votre numéro visible sur la licence";
-        }
+        // Focus sur le champ numéro de licence
+        document.getElementById("licence").focus();
+        document.getElementById("errLicenceScan").style.display = "none";
 
       } else {
         statusEl.classList.remove("visible");
@@ -749,6 +742,7 @@
     if (!tel)     { document.getElementById("errTel").classList.add("visible"); document.getElementById("tel").classList.add("input-error"); hasError = true; }
     if (!licence) { document.getElementById("errLicence").classList.add("visible"); document.getElementById("licence").classList.add("input-error"); hasError = true; }
     if (datesSelectionnees.length === 0) { document.getElementById("errDates").classList.add("visible"); hasError = true; }
+    if (!licenceVerifyUrl) { document.getElementById("errLicenceScan").classList.add("visible"); hasError = true; }
     if (!uploadedFiles.PieceIdentite) { document.getElementById("errPieceIdentite").classList.add("visible"); hasError = true; }
     if (!uploadedFiles.FicheSIA)      { document.getElementById("errFicheSIA").classList.add("visible"); hasError = true; }
     if (isChasseur && !uploadedFiles.PermisChasse) { document.getElementById("errPermisChasse").classList.add("visible"); hasError = true; }
@@ -802,7 +796,7 @@
       permis_chasse  : uploadedFiles.PermisChasse  || "Non applicable",
       assurance      : uploadedFiles.Assurance     || "Non applicable",
       lien_validation    : lienValidation,
-      lien_verification  : licenceVerifyUrl ? licenceVerifyUrl : "Non fourni",
+      lien_verification  : licenceVerifyUrl ? '<a href="' + licenceVerifyUrl + '" target="_blank" style="background:#1a6634; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-weight:600; display:inline-block;">✅ Vérifier la licence FFTir</a>' : "Non fourni",
       message        : document.getElementById("message").value.trim(),
     };
 
