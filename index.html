@@ -229,11 +229,58 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .required { color: #c00; }
+
+    /* ── Upload licence QR ── */
+    .licence-upload-row {
+      background: #f7f9fc;
+      border: 1px solid #e0e8f0;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .licence-upload-desc {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .licence-scan-status {
+      font-size: 12px;
+      color: #166534;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .licence-scan-status.visible { display: block; }
+
+    .licence-scan-error {
+      font-size: 12px;
+      color: #c00;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .licence-scan-error.visible { display: block; }
+
+    .licence-verify-link {
+      font-size: 12px;
+      color: #1a3a5c;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .licence-verify-link.visible { display: block; }
+    .licence-verify-link a { color: #1a3a5c; text-decoration: underline; }
+
   </style>
 </head>
 <body>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 
 <div class="form-card">
   <h1 class="form-title">Inscription session de tir<br>TLD 700 Montagnol</h1>
@@ -278,7 +325,19 @@
 
     <div class="field">
       <label for="licence">Numéro de Licence FFTir (saison en cours) <span class="required">*</span></label>
-      <input type="text" id="licence" name="licence" placeholder="Ex : 123456" />
+      <input type="text" id="licence" name="licence" placeholder="Ex : 82752302" />
+      <div class="licence-upload-row">
+        <div class="licence-upload-desc">📷 Ou uploadez votre licence pour remplissage automatique (PDF ou JPG)</div>
+        <input type="file" id="fileLicence" class="file-input-hidden" accept=".jpg,.jpeg,.png,.pdf" onchange="scanLicenceQR(this)" />
+        <button type="button" class="upload-btn" onclick="document.getElementById('fileLicence').click()">
+          📎 Scanner ma licence FFTir
+        </button>
+        <div class="licence-scan-status" id="licenceScanStatus">✅ Licence scannée avec succès !</div>
+        <div class="licence-scan-error" id="licenceScanError">⚠️ QR code non détecté — saisissez le numéro manuellement.</div>
+        <div class="licence-verify-link" id="licenceVerifyLink">
+          🔗 <a id="licenceVerifyAnchor" href="#" target="_blank">Vérifier la licence sur FFTir</a>
+        </div>
+      </div>
       <span class="field-error" id="errLicence">Veuillez saisir votre numéro de licence FFTir.</span>
     </div>
 
@@ -455,8 +514,97 @@
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
+
+  // ── Scanner QR code licence FFTir ──
+  async function scanLicenceQR(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById("licenceScanStatus");
+    const errorEl  = document.getElementById("licenceScanError");
+    const verifyEl = document.getElementById("licenceVerifyLink");
+    const anchorEl = document.getElementById("licenceVerifyAnchor");
+
+    statusEl.classList.remove("visible");
+    errorEl.classList.remove("visible");
+    verifyEl.classList.remove("visible");
+    statusEl.textContent = "⏳ Scan en cours...";
+    statusEl.classList.add("visible");
+
+    try {
+      let imageData = null;
+
+      if (file.type === "application/pdf") {
+        // PDF → extraire la première page
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 3 });
+        const canvas = document.createElement("canvas");
+        canvas.width  = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext("2d");
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      } else {
+        // Image JPG/PNG
+        const bitmap = await createImageBitmap(file);
+        const canvas = document.createElement("canvas");
+        canvas.width  = bitmap.width;
+        canvas.height = bitmap.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(bitmap, 0, 0);
+        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      }
+
+      // Scanner le QR code
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+      if (code) {
+        const qrData = code.data;
+        console.log("QR code détecté :", qrData);
+
+        // Extraire le numéro de licence depuis le code-barres ou le QR
+        // Format QR : URL itac.pro
+        // On pré-remplit avec ce qu'on peut extraire
+        licenceVerifyUrl = qrData;
+
+        // Chercher aussi dans le texte de la page le numéro de licence
+        // Le numéro est visible sur la licence, on demande confirmation
+        statusEl.textContent = "✅ QR code détecté ! Vérifiez le numéro ci-dessous.";
+
+        // Afficher le lien de vérification
+        anchorEl.href = qrData;
+        verifyEl.classList.add("visible");
+
+        // Pré-remplir si le champ est vide
+        const licenceInput = document.getElementById("licence");
+        if (!licenceInput.value) {
+          // Essayer d'extraire le numéro depuis l'URL
+          const match = qrData.match(/N=([^&]+)/);
+          if (match) {
+            // C'est un UUID, pas le numéro — on laisse l'utilisateur saisir
+          }
+          licenceInput.focus();
+          licenceInput.placeholder = "Saisissez votre numéro visible sur la licence";
+        }
+
+      } else {
+        statusEl.classList.remove("visible");
+        errorEl.classList.add("visible");
+      }
+
+    } catch(e) {
+      console.error("Erreur scan:", e);
+      statusEl.classList.remove("visible");
+      errorEl.classList.add("visible");
+    }
+  }
+
   // ── Upload Uploadcare ──
   const uploadedFiles = { PieceIdentite: null, FicheSIA: null, PermisChasse: null, Assurance: null };
+  let licenceVerifyUrl = null;
 
   async function uploadToUploadcare(file) {
     const formData = new FormData();
@@ -653,7 +801,8 @@
       fiche_sia      : uploadedFiles.FicheSIA      || "Non fourni",
       permis_chasse  : uploadedFiles.PermisChasse  || "Non applicable",
       assurance      : uploadedFiles.Assurance     || "Non applicable",
-      lien_validation: lienValidation,
+      lien_validation    : lienValidation,
+      lien_verification  : licenceVerifyUrl ? licenceVerifyUrl : "Non fourni",
       message        : document.getElementById("message").value.trim(),
     };
 
