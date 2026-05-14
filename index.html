@@ -773,6 +773,10 @@
         dates          : formaterDatesEmail(),
         prix           : prixTotal + " €",
         reglement_mode : reglementMode ? reglementMode.value : "",
+        piece_identite : uploadedFiles.PieceIdentite || "",
+        fiche_sia      : uploadedFiles.FicheSIA      || "",
+        permis_chasse  : uploadedFiles.PermisChasse  || "",
+        assurance      : uploadedFiles.Assurance     || "",
       });
       return BASE_URL_VALIDATION + "?" + p.toString();
     })();
