@@ -76,6 +76,25 @@
       display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-danger {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.75rem;
+    }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
+    .status-delete-success { background: #ecfdf5; color: #166534; border: 1px solid #bbf7d0; padding: 0.75rem 1rem; border-radius: 8px; font-size: 14px; margin-top: 1rem; display: none; }
+    .status-delete-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; padding: 0.75rem 1rem; border-radius: 8px; font-size: 14px; margin-top: 1rem; display: none; }
+
   </style>
 </head>
 <body>
@@ -88,10 +107,11 @@
 
 <script>
   // ── Configuration ──
-  const TOKEN_SECRET        = "bidmYr-1vocwo-nacdur";
-  const EMAILJS_PUBLIC_KEY  = "tBXDtAu12f2gfQ9j6";
-  const EMAILJS_SERVICE_ID  = "service_dlpo2us";
-  const EMAILJS_TEMPLATE_CONFIRMATION = "template_qfsphzk";
+  const TOKEN_SECRET              = "bidmYr-1vocwo-nacdur";
+  const UPLOADCARE_SECRET_KEY     = "c07675130a3fd8eff6d6";
+  const EMAILJS_PUBLIC_KEY  = "TA_PUBLIC_KEY_ICI";
+  const EMAILJS_SERVICE_ID  = "TON_SERVICE_ID_ICI";
+  const EMAILJS_TEMPLATE_CONFIRMATION = "TON_TEMPLATE_CONFIRMATION_ICI";
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
@@ -145,7 +165,89 @@
       <div class="status-msg status-error" id="errorMsg">
         ❌ Erreur lors de l'envoi. Vérifiez vos clés EmailJS.
       </div>
+      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #e5e5e5;" />
+      <p style="font-size: 13px; color: #666; margin-bottom: 0.5rem;">
+        ⚠️ <strong>RGPD</strong> — Après validation, supprimez les documents du candidat conformément à votre politique de conservation.
+      </p>
+      <button class="btn-danger" id="btnSupprimer" onclick="supprimerDocuments()">
+        🗑️ Supprimer les documents
+      </button>
+      <div class="status-delete-success" id="deleteSuccessMsg">
+        ✅ Documents supprimés avec succès.
+      </div>
+      <div class="status-delete-error" id="deleteErrorMsg">
+        ❌ Erreur lors de la suppression. Supprimez manuellement sur Uploadcare.
+      </div>
     `;
+  }
+
+  // Extraire les UUIDs Uploadcare depuis une URL
+  function extractUUID(url) {
+    if (!url || url === "Non fourni" || url === "Non applicable") return null;
+    const match = url.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/);
+    return match ? match[1] : null;
+  }
+
+  async function supprimerDocuments() {
+    const btn = document.getElementById("btnSupprimer");
+    const successMsg = document.getElementById("deleteSuccessMsg");
+    const errorMsg   = document.getElementById("deleteErrorMsg");
+
+    btn.disabled = true;
+    btn.textContent = "⏳ Suppression en cours...";
+    successMsg.style.display = "none";
+    errorMsg.style.display   = "none";
+
+    // Récupérer les URLs depuis les paramètres URL
+    const pieceIdentite = params.get("piece_identite");
+    const ficheSIA      = params.get("fiche_sia");
+    const permisChasse  = params.get("permis_chasse");
+    const assurance     = params.get("assurance");
+
+    const uuids = [pieceIdentite, ficheSIA, permisChasse, assurance]
+      .map(extractUUID)
+      .filter(Boolean);
+
+    if (uuids.length === 0) {
+      errorMsg.textContent = "❌ Aucun document trouvé à supprimer.";
+      errorMsg.style.display = "block";
+      btn.disabled = false;
+      btn.textContent = "🗑️ Supprimer les documents";
+      return;
+    }
+
+    let success = 0;
+    let errors  = 0;
+
+    for (const uuid of uuids) {
+      try {
+        const res = await fetch("https://api.uploadcare.com/files/" + uuid + "/storage/", {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Uploadcare.Simple " + "c9d75257ae4335d97d3d" + ":" + UPLOADCARE_SECRET_KEY,
+            "Accept": "application/vnd.uploadcare-v0.7+json",
+          }
+        });
+        if (res.ok || res.status === 404) {
+          success++;
+        } else {
+          errors++;
+        }
+      } catch(e) {
+        errors++;
+      }
+    }
+
+    if (errors === 0) {
+      successMsg.textContent = "✅ " + success + " document(s) supprimé(s) avec succès.";
+      successMsg.style.display = "block";
+      btn.textContent = "✅ Documents supprimés";
+    } else {
+      errorMsg.textContent = "⚠️ " + success + " supprimé(s), " + errors + " erreur(s). Vérifiez manuellement sur Uploadcare.";
+      errorMsg.style.display = "block";
+      btn.disabled = false;
+      btn.textContent = "🗑️ Réessayer";
+    }
   }
 
   async function validerInscription() {
